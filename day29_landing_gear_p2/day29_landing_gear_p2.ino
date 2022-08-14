@@ -10,6 +10,7 @@
 #define LandingApproachSW A2   //dip switch #2
 #define LandingTerminalSW A3   //dip switch #3
 #define LandingIndicator  5    // Blue LED
+#define buzzer A0
  
 // DEFINE DISPLAY/CONTROL OBJECTS
  
@@ -1105,26 +1106,28 @@ void advanceCountDown() {
  
   if(Altitude <= 0 && System_Error == 0){
     digitalWrite(LandingIndicator, HIGH);
-  // picture loop  
-  My_u8g_Panel.firstPage();  
-  do {
-    My_u8g_Panel.drawXBMP( 0, 0, 128, 64, partyFace);
-  } while( My_u8g_Panel.nextPage() );
+    // picture loop  
+    My_u8g_Panel.firstPage();  
+    do {
+      My_u8g_Panel.drawXBMP( 0, 0, 128, 64, partyFace);
+    } while( My_u8g_Panel.nextPage() );
     displayBitmap = 1; // Party time!
     Altitude = 0;
     wasPressed = 0;
     //SUCCESSFULLY LANDED!!!!!!!!!!!!
-  }
- 
+  } 
   else if(Altitude > counter) {
-  My_u8g_Panel.firstPage();  
-  do {
-    My_u8g_Panel.drawXBMP( 0, 0, 128, 64, increase);
-  } while( My_u8g_Panel.nextPage() );
+    tone(buzzer, 60, 100);
+
+    My_u8g_Panel.firstPage();  
+    do {
+      My_u8g_Panel.drawXBMP( 0, 0, 128, 64, increase);
+    } while( My_u8g_Panel.nextPage() );
     displayBitmap = 3; // descending too quickly...
-  }
- 
+   }
+   
   else if(Altitude < counter){
+  tone(buzzer, 240, 100);
   My_u8g_Panel.firstPage();  
   do {
     My_u8g_Panel.drawXBMP( 0, 0, 128, 64, decrease);
